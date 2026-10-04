@@ -420,7 +420,7 @@ captain_archive_setting() {  # <config>; prints path or returns 1 if unset
 # The original archive and active backlog are never written by this path.
 TASK_INVENTORY_ARCHIVED=0
 task_show_inventory() {  # <id>; sets TASK_SHOW_OUTPUT and archive flag
-  local id=$1 data root backend archive='' config rc=0 tmp output
+  local id=$1 data root backend archive='' config rc=0 tmp output secs=${FM_BACKLOG_ROW_TIMEOUT_SECS:-10}
   TASK_INVENTORY_ARCHIVED=0
   if task_show "$id"; then return 0; fi
   printf '%s\n' "$TASK_SHOW_OUTPUT" | grep -q '^code: NOT_FOUND$' || return 2
@@ -453,8 +453,12 @@ task_show_inventory() {  # <id>; sets TASK_SHOW_OUTPUT and archive flag
     fail "captain resolution archive has ambiguous or open task identity $id"
   fi
   rc=0
+  # Match the active row reader: padded zero and invalid bounds must not
+  # disable the archive deadline either.
+  case "$secs" in ''|*[!0-9]*) secs=10 ;; esac
+  [ "$secs" -gt 0 ] 2>/dev/null || secs=10
   # shellcheck disable=SC2016  # Expansion is deferred to the timed child shell.
-  output=$(fm_run_timed "${FM_BACKLOG_ROW_TIMEOUT_SECS:-10}" bash -c \
+  output=$(fm_run_timed "$secs" bash -c \
     'cd "$1" || exit 2; exec tasks-axi show "$2" --full --backend markdown --file "$3"' \
     _ "$root" "$id" "$tmp" 2>&1) || rc=$?
   rm -f "$tmp"
