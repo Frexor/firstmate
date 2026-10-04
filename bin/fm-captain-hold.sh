@@ -155,6 +155,10 @@
 # absent. An archived entry must be uniquely identified, Done, carry a recorded
 # resolution, and explicitly name this origin; archive reads never feed answer,
 # hold, or channel intake mutations. Active rows always take precedence.
+# Archive lookup uses `archive` in the top-level or `[markdown]` section of the
+# backlog root's .tasks.toml, then $HOME/.tasks-axi/config.toml, then
+# <data-directory>/done-archive.md. Relative settings resolve from the backlog
+# root. Unsupported or empty archive settings refuse rather than guessing.
 # Metadata compatibility: the attestation keeps the historical
 # `decisions_reviewed=1` and `decision_keys=` keys, and an inventory entry that
 # names no existing task resolves through the legacy `<origin>-decision-<entry>`
