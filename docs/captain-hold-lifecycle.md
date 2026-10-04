@@ -526,6 +526,9 @@ The suite does not test the accepted merge-to-cleanup re-hold window or asynchro
 - A report-only unresolved captain call refuses `--none` completion before teardown can erase the source.
 - Non-forced scout teardown always requires the durable inventory verification.
 - The recorded-answer guard holds: a bare `tasks-axi done` close fails `verify` until `answer` records the captain's word, and an ordinary finished task cannot be dressed up as an answered call.
+- Answered approvals remain verifiable after tasks-axi archives them, including through a configured archive path, without rewriting the active backlog or archive.
+  Absent, unresolved, open, duplicate, missing-origin, and mismatched-origin archive records refuse; an unresolved active row cannot borrow an archived answer with the same identity.
+- `tests/fm-backlog-read-bound.test.sh` additionally proves that a padded-zero archive-read bound cannot disable the deadline for public `verify` or `complete`, and that a bounded refusal releases the completion metadata lock.
 
 ### Answers, stamps, and deferral
 

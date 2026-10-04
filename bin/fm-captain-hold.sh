@@ -140,8 +140,8 @@
 # open keyed status decision. With a non-empty inventory, every listed task is
 # verified durable (captain-held, or carrying a recorded resolution),
 # is never the origin itself, and, when `hold --origin` recorded one, was held
-# for this origin; a hold with no recorded origin is accepted on durability
-# alone and named in the output,
+# for this origin; an active-backlog hold with no recorded origin is accepted
+# on durability alone and named in the output,
 # the inventory is unioned idempotently into the metadata, and every still-open
 # keyed status decision is transferred to its durable owner with a
 # `captain-held [key=...]` status close naming the inventory. Later review
