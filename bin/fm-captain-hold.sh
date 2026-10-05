@@ -419,8 +419,8 @@ captain_archive_setting() {  # <config>; prints path or returns 1 if unset
   ' "$1"
 }
 
-# Inventory-only fallback. Normalize archive section headers in a private
-# snapshot, then let tasks-axi parse and show the row, not a second task parser.
+# Inventory-only fallback. Map dated Done archive batches in a private
+# snapshot, preserving other sections, then let tasks-axi parse and show the row.
 # The original archive and active backlog are never written by this path.
 TASK_INVENTORY_ARCHIVED=0
 task_show_inventory() {  # <id>; sets TASK_SHOW_OUTPUT and archive flag
@@ -442,25 +442,29 @@ task_show_inventory() {  # <id>; sets TASK_SHOW_OUTPUT and archive flag
   [ -e "$archive" ] || return 1
   [ -f "$archive" ] && [ -r "$archive" ] || fail "cannot read captain resolution archive $archive"
   tmp=$(umask 077; mktemp "${TMPDIR:-/tmp}/fm-captain-inventory.XXXXXX") || return 2
+  # Match the active row reader: padded zero and invalid bounds must not
+  # disable either the archive scan or the subsequent row read deadline.
+  case "$secs" in ''|*[!0-9]*) secs=10 ;; esac
+  [ "$secs" -gt 0 ] 2>/dev/null || secs=10
   # Duplicate archived identities are ambiguous even if one copy is answered.
-  if ! awk -v id="$id" '
-    BEGIN { print "## Done"; count=0 }
-    /^## / { next }
+  # tasks-axi prune emits dated Archived batches for Done rows. Only those
+  # headings map to Done; ordinary sections retain their original identity.
+  rc=0
+  fm_run_timed "$secs" awk -v id="$id" '
+    BEGIN { count=0 }
+    /^## Archived [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/ { print "## Done"; next }
     {
       if (index($0, "- [x] " id " - ") == 1) count++
       if (index($0, "- [ ] " id " - ") == 1) { count++; open=1 }
       print
     }
     END { if (count > 1 || open) exit 2 }
-  ' "$archive" > "$tmp"; then
+  ' "$archive" > "$tmp" || rc=$?
+  if [ "$rc" -ne 0 ]; then
     rm -f "$tmp"
+    [ "$rc" -ne 124 ] || { printf 'fm-captain-hold: archive read exceeded its bound for %s\n' "$id" >&2; exit 124; }
     fail "captain resolution archive has ambiguous or open task identity $id"
   fi
-  rc=0
-  # Match the active row reader: padded zero and invalid bounds must not
-  # disable the archive deadline either.
-  case "$secs" in ''|*[!0-9]*) secs=10 ;; esac
-  [ "$secs" -gt 0 ] 2>/dev/null || secs=10
   # shellcheck disable=SC2016  # Expansion is deferred to the timed child shell.
   output=$(fm_run_timed "$secs" bash -c \
     'cd "$1" || exit 2; exec tasks-axi show "$2" --full --backend markdown --file "$3"' \
