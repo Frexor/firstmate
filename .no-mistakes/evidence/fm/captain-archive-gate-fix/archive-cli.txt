@@ -1,0 +1,102 @@
+=== Create, answer, and complete approval ===
+repair-approval
+answered: repair-approval
+complete: audit captain-call inventory reviewed (repair-approval)
+ok: prune done -> archived 1 (kept 0)
+help[1]:
+  - Run `tasks-axi list --state done` to see retained Done items
+error: "Task \"repair-approval\" not found in this backlog"
+code: NOT_FOUND
+help[1]: Run `tasks-axi list` to see existing tasks
+exit=1 (refusal required)
+=== Archived approval remains verifiable without altering records ===
+verified: audit captain-call inventory
+complete: audit captain-call inventory reviewed (repair-approval)
+
+## Archived 2026-10-05
+- [x] repair-approval - Approve local security repair (repo: firstmate) (kind: captain) (done 2026-10-05) (hold: fm-hold-v1:QXBwcm92ZSBib3VuZGVkIHJlcGFpcg==) (hold-kind: captain)
+  Resolution recorded by fm-captain-hold.
+  Decision digest: d1951f2010da63f279834a93cacdd8b7b5d50d393daf14105883b4c0992900a3
+  Resolution mode: answered
+
+  Captain decision:
+  zatwierdzam
+
+  Captain hold origin: audit
+
+  Origin: audit
+
+=== Reject invalid archived approvals ===
+--- absent ---
+fm-captain-hold: no captain-held task repair-approval and no migrated hold for it in this home's configured backlog (data directory /home/mjankowski/projects/firstmate/data/captain-archive-gate-fix/isolated-validation/home/worktrees/4e90cf8049c0/01M45J3QZ4BEJSVNHATRVE0PMK/.validation-tmp/home/data); the nearest legacy identity audit-decision-repair-approval also resolves to nothing
+exit=1 (refusal required)
+fm-captain-hold: no captain-held task repair-approval and no migrated hold for it in this home's configured backlog (data directory /home/mjankowski/projects/firstmate/data/captain-archive-gate-fix/isolated-validation/home/worktrees/4e90cf8049c0/01M45J3QZ4BEJSVNHATRVE0PMK/.validation-tmp/home/data); the nearest legacy identity audit-decision-repair-approval also resolves to nothing
+exit=1 (refusal required)
+--- mismatched ---
+fm-captain-hold: captain-held task repair-approval was held for origin other, not audit; hold a task for audit or list the right one
+exit=1 (refusal required)
+fm-captain-hold: captain-held task repair-approval was held for origin other, not audit; hold a task for audit or list the right one
+exit=1 (refusal required)
+--- unresolved ---
+fm-captain-hold: archived captain task repair-approval is not an exact Done task with a recorded resolution
+exit=1 (refusal required)
+fm-captain-hold: archived captain task repair-approval is not an exact Done task with a recorded resolution
+exit=1 (refusal required)
+--- unrecorded ---
+fm-captain-hold: archived captain task repair-approval has no recorded origin
+exit=1 (refusal required)
+fm-captain-hold: archived captain task repair-approval has no recorded origin
+exit=1 (refusal required)
+--- open ---
+fm-captain-hold: captain resolution archive has ambiguous or open task identity repair-approval
+exit=1 (refusal required)
+fm-captain-hold: captain resolution archive has ambiguous or open task identity repair-approval
+exit=1 (refusal required)
+--- duplicate ---
+fm-captain-hold: captain resolution archive has ambiguous or open task identity repair-approval
+exit=1 (refusal required)
+fm-captain-hold: captain resolution archive has ambiguous or open task identity repair-approval
+exit=1 (refusal required)
+--- mixed ---
+fm-captain-hold: captain resolution archive has ambiguous or open task identity repair-approval
+exit=1 (refusal required)
+fm-captain-hold: captain resolution archive has ambiguous or open task identity repair-approval
+exit=1 (refusal required)
+=== Active unresolved identity overrides archived approval ===
+ok: added repair-approval (captain, repo sample) -> Queued
+task:
+  id: repair-approval
+  title: New unresolved approval
+  state: queued
+  blocked: no
+  blocked_by: none
+  held: no
+  hold_reason: "-"
+  hold_kind: "-"
+  hold_until: "-"
+  kind: captain
+  repo: sample
+  priority: "-"
+  created: 2026-10-05
+  closed: "-"
+  deps: none
+  links: none
+  body: ""
+help[2]:
+  - Run `tasks-axi start repair-approval` to move it to in flight
+  - Run `tasks-axi block repair-approval --by <other>` to record a dependency
+fm-captain-hold: captain-held task repair-approval is neither held for the captain nor closed with a recorded captain answer
+exit=1 (refusal required)
+fm-captain-hold: captain-held task repair-approval is neither held for the captain nor closed with a recorded captain answer
+exit=1 (refusal required)
+ok: removed repair-approval
+help[1]:
+  - Run `tasks-axi list` to see remaining tasks
+=== Archived entries cannot be mutated by answer ===
+fm-captain-hold: captain-held task repair-approval is absent from this home's configured backlog (data directory /home/mjankowski/projects/firstmate/data/captain-archive-gate-fix/isolated-validation/home/worktrees/4e90cf8049c0/01M45J3QZ4BEJSVNHATRVE0PMK/.validation-tmp/home/data)
+exit=1 (refusal required)
+=== Relocated configured archive ===
+verified: audit captain-call inventory
+complete: audit captain-call inventory reviewed (repair-approval)
+=== Empty archive configuration refuses ===
+exit=2 (refusal required)

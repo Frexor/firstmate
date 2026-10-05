@@ -1,0 +1,2 @@
+fm-captain-hold: no captain-held task repair-approval and no migrated hold for it in this home's configured backlog (data directory /home/mjankowski/projects/firstmate/data/captain-archive-gate-fix/isolated-validation/home/worktrees/4e90cf8049c0/01M45J3QZ4BEJSVNHATRVE0PMK/.validation-tmp/home/data); the nearest legacy identity audit-decision-repair-approval also resolves to nothing
+baseline exit=1
